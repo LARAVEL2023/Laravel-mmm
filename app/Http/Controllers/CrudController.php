@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
-
 use App\Crud;
 use App\Roll;
 use App\Image;
@@ -12,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
+
 
 class CrudController extends Controller
 {
@@ -26,8 +24,8 @@ class CrudController extends Controller
     {
         
         
-     $post = Post::first();
-    return $post->tags;
+    //  $post = Post::first();
+    // return $post->tags;
 
 
 
@@ -35,11 +33,12 @@ class CrudController extends Controller
         if($search != null){
            
             //$cruds = Crud::withTrashed()->get();
-         $cruds = Crud::withTrashed()->where('email', 'like', '%'.$search.'%')
-                      ->orwhere('name', 'like', '%'.$search.'%')->paginate(2);
+         $cruds = Crud::publish()->withTrashed()->where('email', 'like', '%'.$search.'%')
+                      ->orwhere('name', 'like', '%'.$search.'%')
+                      ->paginate(7);
         }
         else{
-            $cruds = Crud::withTrashed()->paginate(2);
+            $cruds = Crud::withTrashed()->paginate(7);
            // dd($cruds);
            
         }
@@ -82,18 +81,9 @@ class CrudController extends Controller
     {
 
         $rolls = Roll::all();
-        //dd($roll);
-        
-        
+       // dd($rolls);
         return view('crud.create', compact('rolls'));
     }
-
-
-
-
-
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -103,18 +93,41 @@ class CrudController extends Controller
      */
     public function store(Request $request)
     {
-        $crud=Crud::create($request->all());
+        //dd($request->all());
+         $file = $request->file;
+        if($file){
+            $fileName = time(). '-'.$file->getClientOriginalName();
+            $filePath = public_path().'/assets/images';
+            $file->move($filePath, $fileName);
+            $image = Image::create([
+                'image' =>$fileName,
+                'type' =>Image::Type
+            ]);
+       $crud = Crud::create([
+            'image_id' =>$image->id,
+            'name'=> $request->name,
+            'number'=> $request->number,
+            'email'=> $request->email,
+            'password'=> $request->password,
+            'is_publish'=> $request->is_publish,
+            'roll_id'=> $request->roll_id,
+            
+        ]);
+       
+    }
+    
+       
+        // $crud=Crud::create($request->all());
         
         // $filename = time(). "vs.".$request->file('image')->getClientOriginalExtension();
         //  $file= $request->file('image')->storeAs('uploads',$filename);
         
-       $request->session()->put('crud', $crud); 
-       (session('crud'));
+        $request->session()->put('crud', $crud); 
+       //dd((session('crud.id')));
        
        //<p>{{Session::get('user')['city']}}</p>
-        $request->session()->flash('alert-success', $crud->name.'!'.' '. 'Record has been saved');
-        
-        return redirect('image');
+       $msg = "Record has been saved";
+        return redirect()->route('crud.create')->with('success', $msg);
     }
 
     /**
@@ -169,12 +182,23 @@ class CrudController extends Controller
     public function destroy(Crud $crud)
     {
        
+
+        // Delete Image
+        // $crud = Crud::find($id);
+        //  //dd($crud);
+        // $file =public_path().'/assets/images/'.$crud->image->image;
+        // //dd($file);
+        // unlink($file);
+        //  $crud->delete();
+
+
+
         $crud->destroy($crud->id);
         Session::flash('delete', $crud->name.'!'. 'Your Profile has been Deleted');
         return redirect('crud');
     }
    
-     
+   
     
     
 }

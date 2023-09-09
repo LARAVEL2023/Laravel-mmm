@@ -13,6 +13,7 @@
         <tr>
             <th>#</th>
             <th>Roll</th>
+            <th>Image</th>
             <th>Name</th>
             <th>Number</th>
             <th>Email</th>
@@ -22,11 +23,9 @@
        
         <tr>
          <td>{{$crud->id}}</td>
-         @foreach($crud->images as $image)
-         <td><img src="{{asset('uploads/images/'.$image->image)}}" width="100px" height="180px"></td>
-         @endforeach
          <td>{{$crud->rolls->roll}}</td>
-        <td>{{$crud->name}}</td>
+        <td><img src="{{asset('assets/images/'.$crud->image->image)}}" width="100px" height="180px"></td>
+       <td>{{$crud->name}}</td>
          <td>{{$crud->number}}</td>
          <td>{{$crud->email}}</td>
          <td>{{$crud->password}}</td>

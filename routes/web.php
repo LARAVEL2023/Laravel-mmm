@@ -3,8 +3,10 @@
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\SoftDeleteController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use App\customer;
+use App\Http\Controllers\MasterController;
 use App\Http\Controllers\UserController;
 use App\post;
 
@@ -26,7 +28,11 @@ Route::get('/', function () {
 
 Route::resource('crud', CrudController::class); 
 Route::get('softdelete/{id}',[SoftDeleteController::class,'softdelete'])->name('softdelete/{id}');
-
+Route::post('store_post/{id}', [PostController::class, 'store_post']);
+Route::get('post', [PostController::class, 'show']);
+//Route::post('store_comment', [PostController::class, 'store_comment']);
+Route::post('send_message/{id}', [PostController::class, 'store_comment']);
+Route::get('comment', [PostController::class, 'show_comment']);
 
 route::view('search',[SearchController::class,'search']);
 route::get('search',[SearchController::class,'search']);
@@ -50,3 +56,6 @@ Route::view('create', 'create');
 Route::post('store', [UserController::class,'store']);
 Route::view('createpost', 'createpost');
 Route::post('storepost', [UserController::class,'storepost']);
+
+//For Master
+//Route::get('master',[MasterController::class, 'index']);

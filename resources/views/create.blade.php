@@ -9,8 +9,8 @@
    
 </head>
 <body>
-    @extends('master.master')
-    @section('content')
+    
+   
     <h1>Create User</h1>
     @if(Session::has('alert-success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -56,7 +56,7 @@
         <button type="submit">Register</button>
 
     </form>
-    @endsection
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Document crud</title>
     <style>
         #outer
 {
@@ -41,22 +41,25 @@
     @if(Session::has('delete'))
     {{session::get('delete')}}
     @endif
-    <table border=1px>
+    <table border=1px >
         <tr>
             <th>#</th> 
-            
+            <th>Active</th> 
+            <th>Date</th> 
             <th>Roll</th>
             <th>Name</th>
             <th>Number</th>
             <th>Email</th>
             <th>Password</th>
            <th>Action</th>
+           <th>Post</th>
            
         </tr>
         @foreach($cruds as $crud)
         <tr>
          <td>{{$crud->id}}</td>
-        
+         <td>{{$crud->is_publish == '1' ? 'Yes' : 'No' }}</td>
+         <td>{{$crud->created_at}}</td>
          <td>{{$crud->rolls->roll}}</td>
          <td>{{Str::limit($crud->name, '20')}}</td>
          <td>{{$crud->number}}</td>
@@ -79,7 +82,16 @@
             <button ><a onclick="undo();" href="{{url('softdelete', $crud->id)}}"><i class="fa fa-undo"></i></a></button>
             @endif
         </td>
-        
+        <td>
+            <form action="{{url('store_post', $crud->id)}}" class="form-group" method="post">
+                @csrf
+                <input type="text" name="post" id="post">
+                <input type="hidden" name="crud_id" id="crud_id">
+
+                <button type="submit" class="btn btn-primary">Post</button>
+
+            </form>
+        </td>
          
         </tr>
         @endforeach

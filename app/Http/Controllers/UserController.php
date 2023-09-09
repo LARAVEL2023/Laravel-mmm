@@ -14,11 +14,11 @@ class UserController extends Controller
         
         $user = User::create($request->all());
 
-        dd (URL::current());
+       // dd (URL::current());
         $request->session()->put('user', $user);
         (session('user'));
         $request->session()->flash('alert-success', 'Record has been Registered Successfully');
-        return redirect('createpost');
+        return redirect('show');
     }
 
 
